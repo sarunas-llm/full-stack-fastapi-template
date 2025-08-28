@@ -92,6 +92,69 @@ class ItemsPublic(SQLModel):
     count: int
 
 
+# Shared properties
+class CategoryBase(SQLModel):
+    name: str = Field(min_length=1, max_length=255)
+    description: str | None = Field(default=None, max_length=255)
+
+
+class CategoryCreate(CategoryBase):
+    pass
+
+
+class CategoryUpdate(CategoryBase):
+    name: str | None = Field(default=None, min_length=1, max_length=255)  # type: ignore
+
+
+class Category(CategoryBase, table=True):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    products: list["Product"] = Relationship(back_populates="category")
+
+
+class CategoryPublic(CategoryBase):
+    id: uuid.UUID
+
+
+class CategoriesPublic(SQLModel):
+    data: list[CategoryPublic]
+    count: int
+
+
+# Shared properties
+class ProductBase(SQLModel):
+    name: str = Field(min_length=1, max_length=255)
+    description: str | None = Field(default=None, max_length=255)
+    price: float
+
+
+class ProductCreate(ProductBase):
+    category_id: uuid.UUID
+
+
+class ProductUpdate(ProductBase):
+    name: str | None = Field(default=None, min_length=1, max_length=255)  # type: ignore
+    price: float | None = None
+    category_id: uuid.UUID | None = None
+
+
+class Product(ProductBase, table=True):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    category_id: uuid.UUID = Field(
+        foreign_key="category.id", nullable=False, ondelete="RESTRICT"
+    )
+    category: Category | None = Relationship(back_populates="products")
+
+
+class ProductPublic(ProductBase):
+    id: uuid.UUID
+    category_id: uuid.UUID
+
+
+class ProductsPublic(SQLModel):
+    data: list[ProductPublic]
+    count: int
+
+
 # Generic message
 class Message(SQLModel):
     message: str
