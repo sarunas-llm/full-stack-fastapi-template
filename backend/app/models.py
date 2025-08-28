@@ -106,6 +106,7 @@ class CategoryCreate(CategoryBase):
 # Properties to receive on category update
 class CategoryUpdate(CategoryBase):
     name: str | None = Field(default=None, min_length=1, max_length=255)
+    parent_category_id: uuid.UUID | None = None
 
 
 # Database model

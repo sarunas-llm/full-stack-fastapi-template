@@ -9,6 +9,28 @@ export type Body_login_login_access_token = {
   client_secret?: string | null
 }
 
+export type CategoriesPublic = {
+  data: Array<CategoryPublic>
+  count: number
+}
+
+export type CategoryCreate = {
+  name: string
+  description?: string | null
+}
+
+export type CategoryPublic = {
+  name: string
+  description?: string | null
+  id: string
+  parent_category_id: string | null
+}
+
+export type CategoryUpdate = {
+  name?: string | null
+  description?: string | null
+}
+
 export type HTTPValidationError = {
   detail?: Array<ValidationError>
 }
@@ -49,6 +71,35 @@ export type PrivateUserCreate = {
   password: string
   full_name: string
   is_verified?: boolean
+}
+
+export type ProductCreate = {
+  name: string
+  description?: string | null
+  price: number
+  discount_price?: number | null
+  category_id: string
+}
+
+export type ProductPublic = {
+  name: string
+  description?: string | null
+  price: number
+  discount_price?: number | null
+  id: string
+  category_id: string
+}
+
+export type ProductsPublic = {
+  data: Array<ProductPublic>
+  count: number
+}
+
+export type ProductUpdate = {
+  name?: string | null
+  description?: string | null
+  price?: number | null
+  discount_price?: number | null
 }
 
 export type Token = {
@@ -106,6 +157,38 @@ export type ValidationError = {
   msg: string
   type: string
 }
+
+export type CategoriesReadCategoriesData = {
+  limit?: number
+  skip?: number
+}
+
+export type CategoriesReadCategoriesResponse = CategoriesPublic
+
+export type CategoriesCreateCategoryData = {
+  requestBody: CategoryCreate
+}
+
+export type CategoriesCreateCategoryResponse = CategoryPublic
+
+export type CategoriesReadCategoryData = {
+  id: string
+}
+
+export type CategoriesReadCategoryResponse = CategoryPublic
+
+export type CategoriesUpdateCategoryData = {
+  id: string
+  requestBody: CategoryUpdate
+}
+
+export type CategoriesUpdateCategoryResponse = CategoryPublic
+
+export type CategoriesDeleteCategoryData = {
+  id: string
+}
+
+export type CategoriesDeleteCategoryResponse = Message
 
 export type ItemsReadItemsData = {
   limit?: number
@@ -170,6 +253,38 @@ export type PrivateCreateUserData = {
 }
 
 export type PrivateCreateUserResponse = UserPublic
+
+export type ProductsReadProductsData = {
+  limit?: number
+  skip?: number
+}
+
+export type ProductsReadProductsResponse = ProductsPublic
+
+export type ProductsCreateProductData = {
+  requestBody: ProductCreate
+}
+
+export type ProductsCreateProductResponse = ProductPublic
+
+export type ProductsReadProductData = {
+  id: string
+}
+
+export type ProductsReadProductResponse = ProductPublic
+
+export type ProductsUpdateProductData = {
+  id: string
+  requestBody: ProductUpdate
+}
+
+export type ProductsUpdateProductResponse = ProductPublic
+
+export type ProductsDeleteProductData = {
+  id: string
+}
+
+export type ProductsDeleteProductResponse = Message
 
 export type UsersReadUsersData = {
   limit?: number

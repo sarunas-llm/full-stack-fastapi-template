@@ -17,9 +17,12 @@ import { Route as RecoverPasswordImport } from './routes/recover-password'
 import { Route as LoginImport } from './routes/login'
 import { Route as LayoutImport } from './routes/_layout'
 import { Route as LayoutIndexImport } from './routes/_layout/index'
+import { Route as CategoriesCategoryIdImport } from './routes/categories.$categoryId'
 import { Route as LayoutSettingsImport } from './routes/_layout/settings'
 import { Route as LayoutItemsImport } from './routes/_layout/items'
+import { Route as LayoutCategoriesImport } from './routes/_layout/categories'
 import { Route as LayoutAdminImport } from './routes/_layout/admin'
+import { Route as LayoutCategoriesCategoryIdImport } from './routes/_layout/categories.$categoryId'
 
 // Create/Update Routes
 
@@ -53,6 +56,11 @@ const LayoutIndexRoute = LayoutIndexImport.update({
   getParentRoute: () => LayoutRoute,
 } as any)
 
+const CategoriesCategoryIdRoute = CategoriesCategoryIdImport.update({
+  path: '/categories/$categoryId',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const LayoutSettingsRoute = LayoutSettingsImport.update({
   path: '/settings',
   getParentRoute: () => LayoutRoute,
@@ -63,10 +71,22 @@ const LayoutItemsRoute = LayoutItemsImport.update({
   getParentRoute: () => LayoutRoute,
 } as any)
 
+const LayoutCategoriesRoute = LayoutCategoriesImport.update({
+  path: '/categories',
+  getParentRoute: () => LayoutRoute,
+} as any)
+
 const LayoutAdminRoute = LayoutAdminImport.update({
   path: '/admin',
   getParentRoute: () => LayoutRoute,
 } as any)
+
+const LayoutCategoriesCategoryIdRoute = LayoutCategoriesCategoryIdImport.update(
+  {
+    path: '/$categoryId',
+    getParentRoute: () => LayoutCategoriesRoute,
+  } as any,
+)
 
 // Populate the FileRoutesByPath interface
 
@@ -96,6 +116,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutAdminImport
       parentRoute: typeof LayoutImport
     }
+    '/_layout/categories': {
+      preLoaderRoute: typeof LayoutCategoriesImport
+      parentRoute: typeof LayoutImport
+    }
     '/_layout/items': {
       preLoaderRoute: typeof LayoutItemsImport
       parentRoute: typeof LayoutImport
@@ -104,9 +128,17 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutSettingsImport
       parentRoute: typeof LayoutImport
     }
+    '/categories/$categoryId': {
+      preLoaderRoute: typeof CategoriesCategoryIdImport
+      parentRoute: typeof rootRoute
+    }
     '/_layout/': {
       preLoaderRoute: typeof LayoutIndexImport
       parentRoute: typeof LayoutImport
+    }
+    '/_layout/categories/$categoryId': {
+      preLoaderRoute: typeof LayoutCategoriesCategoryIdImport
+      parentRoute: typeof LayoutCategoriesImport
     }
   }
 }
@@ -116,6 +148,7 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren([
   LayoutRoute.addChildren([
     LayoutAdminRoute,
+    LayoutCategoriesRoute.addChildren([LayoutCategoriesCategoryIdRoute]),
     LayoutItemsRoute,
     LayoutSettingsRoute,
     LayoutIndexRoute,
@@ -124,6 +157,7 @@ export const routeTree = rootRoute.addChildren([
   RecoverPasswordRoute,
   ResetPasswordRoute,
   SignupRoute,
+  CategoriesCategoryIdRoute,
 ])
 
 /* prettier-ignore-end */
