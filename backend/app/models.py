@@ -92,6 +92,84 @@ class ItemsPublic(SQLModel):
     count: int
 
 
+# Category properties
+class CategoryBase(SQLModel):
+    name: str = Field(min_length=1, max_length=255)
+    description: str | None = Field(default=None, max_length=255)
+
+
+# Properties to receive on category creation
+class CategoryCreate(CategoryBase):
+    pass
+
+
+# Properties to receive on category update
+class CategoryUpdate(CategoryBase):
+    name: str | None = Field(default=None, min_length=1, max_length=255)
+    parent_category_id: uuid.UUID | None = None
+
+
+# Database model
+class Category(CategoryBase, table=True):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    parent_category_id: uuid.UUID | None = Field(
+        default=None, foreign_key="category.id"
+    )
+    parent_category: "Category" = Relationship(
+        back_populates="sub_categories", sa_relationship_kwargs=dict(remote_side="Category.id")
+    )
+    sub_categories: list["Category"] = Relationship(back_populates="parent_category")
+    products: list["Product"] = Relationship(back_populates="category")
+
+
+# Properties to return via API
+class CategoryPublic(CategoryBase):
+    id: uuid.UUID
+    parent_category_id: uuid.UUID | None
+
+
+class CategoriesPublic(SQLModel):
+    data: list[CategoryPublic]
+    count: int
+
+
+# Product properties
+class ProductBase(SQLModel):
+    name: str = Field(min_length=1, max_length=255)
+    description: str | None = Field(default=None, max_length=255)
+    price: float
+    discount_price: float | None = None
+
+
+# Properties to receive on product creation
+class ProductCreate(ProductBase):
+    category_id: uuid.UUID
+
+
+# Properties to receive on product update
+class ProductUpdate(ProductBase):
+    name: str | None = Field(default=None, min_length=1, max_length=255)
+    price: float | None = None
+
+
+# Database model
+class Product(ProductBase, table=True):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    category_id: uuid.UUID = Field(foreign_key="category.id")
+    category: Category = Relationship(back_populates="products")
+
+
+# Properties to return via API
+class ProductPublic(ProductBase):
+    id: uuid.UUID
+    category_id: uuid.UUID
+
+
+class ProductsPublic(SQLModel):
+    data: list[ProductPublic]
+    count: int
+
+
 # Generic message
 class Message(SQLModel):
     message: str

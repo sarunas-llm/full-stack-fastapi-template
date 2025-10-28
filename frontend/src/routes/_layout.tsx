@@ -17,6 +17,7 @@ export const Route = createFileRoute("/_layout")({
 })
 
 function Layout() {
+  console.log("Rendering Layout")
   return (
     <Flex direction="column" h="100vh">
       <Navbar />
